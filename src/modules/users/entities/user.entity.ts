@@ -1,46 +1,51 @@
+import { STATE } from 'src/constants/state.enum';
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 @Entity()
 export class User {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('increment')
   id: number;
 
-  @Column()
+  @Column({ type: 'text', nullable: false })
   userName: string;
 
-  @Column()
+  @Column({ type: 'text', nullable: false })
   email: string;
 
-  @Column()
+  @Column({ type: 'text', nullable: false })
   password: string;
 
-  @Column()
+  @Column({ type: 'text', nullable: false })
   country: string;
 
-  @Column()
+  @Column({ type: 'date', nullable: false })
   birthDate: Date;
 
-  @Column()
-  creationDate: string;
+  @Column({ type: 'date', nullable: false })
+  creationDate: Date;
 
-  @Column()
+  @Column({ type: 'int', nullable: false })
   followers: number;
 
-  @Column()
+  @Column({ type: 'int', nullable: false })
   following: number;
 
-  @Column()
+  @Column({ type: 'text', nullable: false, array: true })
   interests: string;
 
-  @Column()
+  @Column({ type: 'text', nullable: false })
   avatar: string;
 
-  @Column()
+  @Column({
+    type: 'text',
+    default:
+      'https://e0.pxfuel.com/wallpapers/696/294/desktop-wallpaper-grey-color-background-solid-color-background.jpg',
+  })
   background: string;
 
-  @Column()
+  @Column({ type: 'int', default: 0 })
   notifications: number;
 
-  @Column()
+  @Column({ type: 'enum', enum: STATE, default: STATE.ACTIVE })
   state: boolean;
 }
