@@ -6,10 +6,10 @@ import {
   Patch,
   Param,
   Delete,
-} from '@nestjs/common';
-import { PostsService } from './posts.service';
-import { CreatePostDto } from './dto/create-post.dto';
-import { UpdatePostDto } from './dto/update-post.dto';
+} from '@nestjs/common'
+import { PostsService } from './posts.service'
+import { CreatePostDto } from './dto/create-post.dto'
+import { UpdatePostDto } from './dto/update-post.dto'
 
 @Controller('posts')
 export class PostsController {
@@ -17,26 +17,46 @@ export class PostsController {
 
   @Post('create')
   create(@Body() createPostDto: CreatePostDto) {
-    return this.postsService.create(createPostDto);
+    return this.postsService.create(createPostDto)
   }
 
   @Get('all')
   findAll() {
-    return this.postsService.findAll();
+    return this.postsService.findAll()
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.postsService.findOne(id);
+  @Get('id/:postId')
+  findOne(@Param('postId') postId: string) {
+    return this.postsService.findOne(postId)
   }
 
-  @Patch('update/:id')
-  update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
-    return this.postsService.update(id, updatePostDto);
+  @Get('active')
+  findActivePosts() {
+    return this.postsService.findActivePosts()
+  }
+
+  @Get('banned')
+  findBannedPosts() {
+    return this.postsService.findBannedPosts()
+  }
+
+  @Patch('ban/:postId')
+  banPost(@Param('postId') postId: string, @Body() reason: string[]) {
+    return this.postsService.banPost(postId, reason)
+  }
+
+  @Patch('unban/:postId')
+  unBanPost(@Param('postId') postId: string) {
+    return this.postsService.unBanPost(postId)
+  }
+
+  @Patch('update/:postId')
+  update(@Param('postId') postId: string, @Body() updatePostDto: UpdatePostDto) {
+    return this.postsService.update(postId, updatePostDto)
   }
 
   @Delete('delete/:id')
   remove(@Param('id') id: string) {
-    return this.postsService.remove(id);
+    return this.postsService.remove(id)
   }
 }
