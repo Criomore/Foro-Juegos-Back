@@ -25,18 +25,38 @@ export class UsersController {
     return this.usersService.findAll()
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.usersService.findOne(id)
+  @Get('id/:userId')
+  findOne(@Param('userId') userId: string) {
+    return this.usersService.findOne(userId)
   }
 
-  @Patch('update/:id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(id, updateUserDto)
+  @Get('actives')
+  findActiveUsers() {
+    return this.usersService.findActiveUsers()
+  }
+  @Get('banned')
+  findBaneedUsers() {
+    return this.usersService.findBannedUsers()
   }
 
-  @Delete('delete/:id')
-  remove(@Param('id') id: string) {
+  @Patch('ban/:userId')
+  banUser(@Param('userId') userId: string, @Body() reason: string[]) {
+    return this.usersService.banUser(userId, reason)
+  }
+
+  @Patch('unban/:userId')
+  unBanUser(@Param('userId') userId: string) {
+    return this.usersService.unBanUser(userId)
+  }
+
+  @Patch('update/:userId')
+  update(@Param('userId') userId: string, @Body() updateUserDto: UpdateUserDto) {
+    console.log(userId);
+    return this.usersService.update(userId, updateUserDto)
+  }
+
+  @Delete('delete/:userId')
+  remove(@Param('userId') id: string) {
     return this.usersService.remove(id)
   }
 }
