@@ -1,37 +1,38 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { STATE } from 'src/constants/state.enum';
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Post {
-  @PrimaryGeneratedColumn('increment')
-  id: number
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-  @Column({type: 'text', nullable: false})
-  title: string
+  @Column({ type: 'text', nullable: false })
+  title: string;
 
-  @Column({type: 'text', nullable: false})
-  description: string
+  @Column({ type: 'text', nullable: true })
+  description: string;
 
-  @Column({type: 'text', nullable: false})
-  resource: string
+  @Column({ type: 'text', nullable: true })
+  resource: string;
 
-  @Column({type: 'text', nullable: false})
-  creationDate: Date
+  @CreateDateColumn()
+  creationDate: Date;
 
-  @Column({type: 'text', nullable: false})
-  owner: string 
+  @Column({ type: 'text', nullable: false })
+  owner: string;
 
-  @Column({type: 'int', default: 0})
-  reactions: number
+  @Column({ type: 'int', default: 0 })
+  reactions: number;
 
-  @Column({type: 'int', default: 0})
-  comments: number
+  @Column({ type: 'int', default: 0 })
+  comments: number;
 
-  @Column({type: 'boolean', default: true})
-  state: boolean
+  @Column({ type: 'enum', enum: STATE, default: STATE.ACTIVE })
+  state: number;
 
-  @Column({type: 'text', array: true, nullable: false})
-  tags: string
+  @Column({ type: 'text', array: true, nullable: true })
+  tags: string;
 
-  @Column({type: 'boolean', default: false})
-  spoiler: boolean
+  @Column({ type: 'boolean', default: false })
+  spoiler: boolean;
 }
