@@ -27,7 +27,7 @@ export class UsersService {
     } catch (error) {
       throw new HttpException(
         error.driverError ? error.driverError.detail : error,
-        400,
+        HttpStatus.BAD_REQUEST,
       )
     }
   }
@@ -50,7 +50,7 @@ export class UsersService {
     } catch (error) {
       throw new HttpException(
         error.driverError ? error.driverError.detail : error,
-        400,
+        HttpStatus.BAD_REQUEST,
       )
     }
   }
@@ -58,15 +58,29 @@ export class UsersService {
   async findOne(userId: string) {
     try {
       const user = await this.userRepository.findOne({ where: { id: userId } })
+
+      if (user === null)
+        throw new HttpException(
+          `El usuario con id ${userId} ha sido eliminado`,
+          HttpStatus.BAD_REQUEST,
+        )
+
+      else if (user.state === STATE.BANNED)
+        throw new HttpException(
+          `El usuario con id ${userId} ha sido baneado`,
+          HttpStatus.BAD_REQUEST,
+        )
+
+
       return {
         status: 'success',
         data: { user },
       }
     } catch (error) {
-      if (error.driverError.code === '22P02') {
+      if (error.driverError) {
         throw new HttpException('Usuario no encontrado', HttpStatus.NOT_FOUND)
       }
-      throw new HttpException(error, 400)
+      throw new HttpException(error, HttpStatus.BAD_REQUEST)
     }
   }
 
@@ -83,7 +97,7 @@ export class UsersService {
         data: { count, users },
       }
     } catch (error) {
-      throw new HttpException(error, 400)
+      throw new HttpException(error, HttpStatus.BAD_REQUEST)
     }
   }
 
@@ -100,7 +114,7 @@ export class UsersService {
         data: { count, users },
       }
     } catch (error) {
-      throw new HttpException(error, 400)
+      throw new HttpException(error, HttpStatus.BAD_REQUEST)
     }
   }
 
@@ -130,7 +144,7 @@ export class UsersService {
       if (error.driverError) {
         throw new HttpException('Usuario no encontrado', HttpStatus.NOT_FOUND)
       }
-      throw new HttpException(error, 400)
+      throw new HttpException(error, HttpStatus.BAD_REQUEST)
     }
   }
 
@@ -160,7 +174,7 @@ export class UsersService {
       if (error.driverError) {
         throw new HttpException('Usuario no encontrado', HttpStatus.NOT_FOUND)
       }
-      throw new HttpException(error, 400)
+      throw new HttpException(error, HttpStatus.BAD_REQUEST)
     }
   }
 
@@ -181,7 +195,7 @@ export class UsersService {
       if (error.driverError) {
         throw new HttpException('Usuario no encontrado', HttpStatus.NOT_FOUND)
       }
-      throw new HttpException(error, 400)
+      throw new HttpException(error, HttpStatus.BAD_REQUEST)
     }
   }
 
@@ -201,7 +215,7 @@ export class UsersService {
       if (error.driverError) {
         throw new HttpException('Usuario no encontrado', HttpStatus.NOT_FOUND)
       }
-      throw new HttpException(error, 400)
+      throw new HttpException(error, HttpStatus.BAD_REQUEST)
     }
   }
 }
