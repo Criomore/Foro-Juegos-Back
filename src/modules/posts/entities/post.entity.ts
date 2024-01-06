@@ -2,36 +2,36 @@ import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Post {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('increment')
   id: number
 
-  @Column()
+  @Column({type: 'text', nullable: false})
   title: string
 
-  @Column()
+  @Column({type: 'text', nullable: false})
   description: string
 
-  @Column()
+  @Column({type: 'text', nullable: false})
   resource: string
 
-  @Column()
+  @Column({type: 'text', nullable: false})
   creationDate: Date
 
-  @Column()
+  @Column({type: 'text', nullable: false})
   owner: string 
 
-  @Column()
+  @Column({type: 'int', default: 0})
   reactions: number
 
-  @Column()
+  @Column({type: 'int', default: 0})
   comments: number
 
-  @Column()
+  @Column({type: 'boolean', default: true})
   state: boolean
 
-  @Column()
+  @Column({type: 'text', array: true, nullable: false})
   tags: string
 
-  @Column()
+  @Column({type: 'boolean', default: false})
   spoiler: boolean
 }
