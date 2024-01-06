@@ -1,26 +1,26 @@
-import { IsArray, IsBoolean, IsDate, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator'
+import { IsArray, IsBoolean, IsDateString, IsNotEmpty, IsOptional, IsString } from 'class-validator'
 
 export class CreatePostDto {
-  @IsString()
-  @IsNotEmpty()
+  @IsString({message: 'Deberia ser un texto'})
+  @IsNotEmpty({message: 'El campo "Titulo" es obligatorio'})
   title: string
 
-  @IsString()
+  @IsString({message: 'Deberia ser un texto'})
   @IsOptional()
   description: string
 
-  @IsString()
+  @IsString({message: 'Deberia ser un texto'})
   @IsOptional()
   resource: string
 
-  @IsDate()
+  @IsDateString()
   creationDate: Date
 
-  @IsString()
+  @IsString({message: 'Deberia ser un texto'})
   owner: string
 
   @IsArray()
-  @IsString({each: true})
+  @IsString({each: true, message: 'Deberia ser un texto'})
   @IsOptional()
   tags: string
 
