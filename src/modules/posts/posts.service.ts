@@ -57,6 +57,18 @@ export class PostsService {
     try {
       const post = await this.postRepository.findOne({ where: { id: postId } })
 
+      if (post === null) {
+        throw new HttpException(
+          'la publicacion ha sido eliminada.',
+          HttpStatus.BAD_REQUEST,
+        )
+      } else if (post.state === STATE.BANNED) {
+        throw new HttpException(
+          'La publicacion ha sido baneada',
+          HttpStatus.BAD_REQUEST,
+        )
+      }
+
       return {
         status: 'success',
         data: {
@@ -64,7 +76,7 @@ export class PostsService {
         },
       }
     } catch (error) {
-      if (error.driverError.code === '22P02')
+      if (error.driverError)
         throw new HttpException(
           'La publicación no ha sido encontrada.',
           HttpStatus.NOT_FOUND,
@@ -211,10 +223,9 @@ export class PostsService {
         status: 'success',
         data: {
           post,
-          message: 'La publicación se ha eliminado correctamente'
-        }
+          message: 'La publicación se ha eliminado correctamente',
+        },
       }
-
     } catch (error) {
       if (error.driverError)
         throw new HttpException(
