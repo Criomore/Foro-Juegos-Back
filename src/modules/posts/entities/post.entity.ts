@@ -1,38 +1,45 @@
-import { STATE } from 'src/constants/state.enum';
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { STATE } from 'src/constants/state.enum'
+import { Comment } from 'src/modules/comments/entities/comment.entity'
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm'
 
 @Entity()
 export class Post {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id: string
 
   @Column({ type: 'text', nullable: false })
-  title: string;
+  title: string
 
   @Column({ type: 'text', nullable: true })
-  description: string;
+  description: string
 
   @Column({ type: 'text', nullable: true })
-  resource: string;
+  resource: string
 
   @CreateDateColumn()
-  creationDate: Date;
+  creationDate: Date
 
   @Column({ type: 'text', nullable: false })
-  owner: string;
+  owner: string
 
   @Column({ type: 'int', default: 0 })
-  reactions: number;
-
-  @Column({ type: 'int', default: 0 })
-  comments: number;
+  reactions: number
 
   @Column({ type: 'enum', enum: STATE, default: STATE.ACTIVE })
-  state: number;
+  state: number
 
   @Column({ type: 'text', array: true, nullable: true })
-  tags: string;
+  tags: string
 
   @Column({ type: 'boolean', default: false })
-  spoiler: boolean;
+  spoiler: boolean
+
+  @OneToMany(() => Comment, (comment) => comment.post)
+  comments: Comment[]
 }

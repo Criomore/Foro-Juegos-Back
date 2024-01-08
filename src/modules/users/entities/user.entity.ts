@@ -1,11 +1,13 @@
 import { Transform } from 'class-transformer'
 import { IsDateString } from 'class-validator'
 import { STATE } from 'src/constants/state.enum'
+import { Comment } from 'src/modules/comments/entities/comment.entity'
 import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
+  OneToMany,
 } from 'typeorm'
 
 @Entity()
@@ -57,4 +59,8 @@ export class User {
 
   @Column({ type: 'enum', enum: STATE, default: STATE.ACTIVE })
   state: number
+
+
+  @OneToMany(() => Comment, comment => comment.owner)
+  comments: Comment[];
 }
