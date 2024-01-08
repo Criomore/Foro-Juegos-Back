@@ -43,7 +43,7 @@ export class UsersController {
   banUser(@Param('userId') userId: string, @Body() reason: string[]) {
     return this.usersService.banUser(userId, reason)
   }
-
+ 
   @Patch('unban/:userId')
   unBanUser(@Param('userId') userId: string) {
     return this.usersService.unBanUser(userId)

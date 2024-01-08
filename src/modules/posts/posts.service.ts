@@ -24,7 +24,7 @@ export class PostsService {
         },
       }
     } catch (error) {
-      throw new HttpException(error, 400)
+      throw new HttpException(error, HttpStatus.BAD_REQUEST)
     }
   }
 
@@ -49,7 +49,7 @@ export class PostsService {
         },
       }
     } catch (error) {
-      throw new HttpException(error, 400)
+      throw new HttpException(error, HttpStatus.BAD_REQUEST)
     }
   }
 
@@ -59,7 +59,7 @@ export class PostsService {
 
       if (post === null) {
         throw new HttpException(
-          'la publicacion ha sido eliminada.',
+          'La publicacion ha sido eliminada.',
           HttpStatus.BAD_REQUEST,
         )
       } else if (post.state === STATE.BANNED) {
@@ -81,7 +81,7 @@ export class PostsService {
           'La publicación no ha sido encontrada.',
           HttpStatus.NOT_FOUND,
         )
-      throw new HttpException(error, 400)
+      throw new HttpException(error, HttpStatus.BAD_REQUEST)
     }
   }
 
@@ -102,7 +102,7 @@ export class PostsService {
         },
       }
     } catch (error) {
-      throw new HttpException(error, 400)
+      throw new HttpException(error, HttpStatus.BAD_REQUEST)
     }
   }
 
@@ -123,7 +123,7 @@ export class PostsService {
         },
       }
     } catch (error) {
-      throw new HttpException(error, 400)
+      throw new HttpException(error, HttpStatus.BAD_REQUEST)
     }
   }
 
@@ -132,9 +132,8 @@ export class PostsService {
       const post = await this.postRepository.findOne({ where: { id: postId } })
 
       if (post.state === STATE.BANNED) {
-        console.log('jaider bonito')
         throw new HttpException(
-          'La publicación ya ha sido baneado anteriormente',
+          'La publicación ya ha sido baneada anteriormente',
           HttpStatus.BAD_REQUEST,
         )
       }
@@ -155,7 +154,7 @@ export class PostsService {
           'La publicación no ha sido encontrada.',
           HttpStatus.NOT_FOUND,
         )
-      throw new HttpException(error, 400)
+      throw new HttpException(error, HttpStatus.BAD_REQUEST)
     }
   }
 
@@ -187,7 +186,7 @@ export class PostsService {
           'La publicación no ha sido encontrada.',
           HttpStatus.NOT_FOUND,
         )
-      throw new HttpException(error, 400)
+      throw new HttpException(error, HttpStatus.BAD_REQUEST)
     }
   }
 
@@ -210,7 +209,7 @@ export class PostsService {
           'La publicación no ha sido encontrada.',
           HttpStatus.NOT_FOUND,
         )
-      throw new HttpException(error, 400)
+      throw new HttpException(error, HttpStatus.BAD_REQUEST)
     }
   }
 
@@ -232,7 +231,7 @@ export class PostsService {
           'La publicación no ha sido encontrada.',
           HttpStatus.NOT_FOUND,
         )
-      throw new HttpException(error, 400)
+      throw new HttpException(error, HttpStatus.BAD_REQUEST)
     }
   }
 }
