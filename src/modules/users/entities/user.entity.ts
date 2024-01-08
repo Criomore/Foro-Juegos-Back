@@ -1,6 +1,7 @@
 import { Exclude, Transform } from 'class-transformer'
 import { IsDateString } from 'class-validator'
 import { STATE } from 'src/constants/state.enum'
+import { Comment } from 'src/modules/comments/entities/comment.entity'
 import { Post } from 'src/modules/posts/entities/post.entity'
 import {
   Entity,
@@ -61,8 +62,11 @@ export class User {
   @Column({ type: 'enum', enum: STATE, default: STATE.ACTIVE })
   state: number
 
-
   // Relaciones
-  @OneToMany(() => Post, post => post.owner)
+
+  @OneToMany(() => Comment, (comment) => comment.owner)
+  comments: Comment[]
+  
+  @OneToMany(() => Post, (post) => post.owner)
   posts: Post[]
 }

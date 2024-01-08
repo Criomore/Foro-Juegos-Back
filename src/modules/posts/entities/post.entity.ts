@@ -1,41 +1,49 @@
-import { STATE } from 'src/constants/state.enum';
-import { User } from 'src/modules/users/entities/user.entity';
-import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { STATE } from 'src/constants/state.enum'
+import { Comment } from 'src/modules/comments/entities/comment.entity'
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm'
+import { User } from 'src/modules/users/entities/user.entity'
 
 @Entity()
 export class Post {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id: string
 
   @Column({ type: 'text', nullable: false })
-  title: string;
+  title: string
 
   @Column({ type: 'text', nullable: true })
-  description: string;
+  description: string
 
   @Column({ type: 'text', nullable: true })
-  resource: string;
+  resource: string
 
   @CreateDateColumn()
-  creationDate: Date;
+  creationDate: Date
 
   @Column({ type: 'int', default: 0 })
-  reactions: number;
-
-  @Column({ type: 'int', default: 0 })
-  comments: number;
+  reactions: number
 
   @Column({ type: 'enum', enum: STATE, default: STATE.ACTIVE })
-  state: number;
+  state: number
 
   @Column({ type: 'text', array: true, nullable: true })
-  tags: string;
+  tags: string
 
   @Column({ type: 'boolean', default: false })
-  spoiler: boolean;
-
+  spoiler: boolean
 
   // Relaciones
-  @ManyToOne(() => User, user => user.posts)
+
+  @ManyToOne(() => User, (user) => user.posts)
   owner: User
+
+  @OneToMany(() => Comment, (comment) => comment.post)
+  comments: Comment[]
 }
