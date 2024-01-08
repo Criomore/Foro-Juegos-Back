@@ -1,5 +1,6 @@
 import { STATE } from 'src/constants/state.enum';
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { User } from 'src/modules/users/entities/user.entity';
+import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Post {
@@ -18,9 +19,6 @@ export class Post {
   @CreateDateColumn()
   creationDate: Date;
 
-  @Column({ type: 'text', nullable: false })
-  owner: string;
-
   @Column({ type: 'int', default: 0 })
   reactions: number;
 
@@ -35,4 +33,9 @@ export class Post {
 
   @Column({ type: 'boolean', default: false })
   spoiler: boolean;
+
+
+  // Relaciones
+  @ManyToOne(() => User, user => user.posts)
+  owner: User
 }

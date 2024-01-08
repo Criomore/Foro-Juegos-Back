@@ -1,11 +1,13 @@
-import { Transform } from 'class-transformer'
+import { Exclude, Transform } from 'class-transformer'
 import { IsDateString } from 'class-validator'
 import { STATE } from 'src/constants/state.enum'
+import { Post } from 'src/modules/posts/entities/post.entity'
 import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
+  OneToMany,
 } from 'typeorm'
 
 @Entity()
@@ -20,6 +22,7 @@ export class User {
   email: string
 
   @Column({ type: 'text', nullable: false })
+  @Exclude()
   password: string
 
   @Column({ type: 'text', nullable: false })
@@ -57,4 +60,9 @@ export class User {
 
   @Column({ type: 'enum', enum: STATE, default: STATE.ACTIVE })
   state: number
+
+
+  // Relaciones
+  @OneToMany(() => Post, post => post.owner)
+  posts: Post[]
 }

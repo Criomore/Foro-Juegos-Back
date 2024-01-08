@@ -84,6 +84,8 @@ export class UsersService {
     }
   }
 
+  // async findBy({key, value}: { key: keyof CreateUserDto, value: any})
+
   async findActiveUsers() {
     try {
       const users = await this.userRepository.find({
