@@ -1,7 +1,9 @@
-import { Module } from '@nestjs/common';
+import { ClassSerializerInterceptor, Module, ValidationPipe } from '@nestjs/common';
 import { PostsModule } from './modules/posts/posts.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './modules/users/users.module';
+import { APP_INTERCEPTOR, APP_PIPE, Reflector } from '@nestjs/core';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [PostsModule, UsersModule,
@@ -14,8 +16,19 @@ import { UsersModule } from './modules/users/users.module';
       database: 'forum',
       entities: ["dist/**/*.entity{.ts,.js}"],
       synchronize: true,
-    })],
+    }),
+    AuthModule],
   controllers: [],
-  providers: [],
+  providers: [
+    {
+      provide: APP_PIPE,
+      useClass: ValidationPipe,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: ClassSerializerInterceptor,
+    },
+    Reflector,
+  ],
 })
 export class AppModule {}
