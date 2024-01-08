@@ -1,11 +1,19 @@
-import { Module } from '@nestjs/common';
-import { PostsModule } from './modules/posts/posts.module';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { UsersModule } from './modules/users/users.module';
-import { CommentsModule } from './modules/comments/comments.module';
+import {
+  ClassSerializerInterceptor,
+  Module,
+  ValidationPipe,
+} from '@nestjs/common'
+import { TypeOrmModule } from '@nestjs/typeorm'
+import { PostsModule } from './modules/posts/posts.module'
+import { UsersModule } from './modules/users/users.module'
+import { CommentsModule } from './modules/comments/comments.module'
+import { AuthModule } from './modules/auth/auth.module'
+import { APP_INTERCEPTOR, APP_PIPE, Reflector } from '@nestjs/core'
 
 @Module({
-  imports: [PostsModule, UsersModule,
+  imports: [
+    PostsModule,
+    UsersModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'localhost',
@@ -13,11 +21,23 @@ import { CommentsModule } from './modules/comments/comments.module';
       username: 'root',
       password: '10051006',
       database: 'forum',
-      entities: ["dist/**/*.entity{.ts,.js}"],
+      entities: ['dist/**/*.entity{.ts,.js}'],
       synchronize: true,
     }),
-    CommentsModule],
+    CommentsModule,
+    AuthModule,
+  ],
   controllers: [],
-  providers: [],
+  providers: [
+    {
+      provide: APP_PIPE,
+      useClass: ValidationPipe,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: ClassSerializerInterceptor,
+    },
+    Reflector,
+  ],
 })
 export class AppModule {}
