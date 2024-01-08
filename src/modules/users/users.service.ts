@@ -84,7 +84,7 @@ export class UsersService {
     }
   }
 
-  // async findBy({key, value}: { key: keyof CreateUserDto, value: any})
+  async findBy({key, value}: { key: keyof CreateUserDto, value: any}){}
 
   async findActiveUsers() {
     try {
