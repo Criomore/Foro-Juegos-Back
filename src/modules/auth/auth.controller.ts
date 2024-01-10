@@ -1,34 +1,21 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Body, Controller, Post, UnauthorizedException } from '@nestjs/common';
+import { AuthBody } from './interfaces/auth.interface';
 import { AuthService } from './auth.service';
-import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService){}
 
-  @Post()
-  create(@Body() createAuthDto: CreateAuthDto) {
-    return this.authService.create(createAuthDto);
-  }
+  @Post('login')
+  async login(@Body() {username, password}: AuthBody){
+    const userValidate = await this.authService.validateUser(username, password)
 
-  @Get()
-  findAll() {
-    return this.authService.findAll();
-  }
+    if(!userValidate){
+      throw new UnauthorizedException('Los datos no son válidos')
+    }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.authService.findOne(+id);
-  }
+    const jwt = await this.authService.generateJWT(userValidate)
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAuthDto: UpdateAuthDto) {
-    return this.authService.update(+id, updateAuthDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.authService.remove(+id);
+    return jwt  
   }
 }

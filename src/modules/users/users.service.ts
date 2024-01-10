@@ -5,7 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { User } from './entities/user.entity'
 import { Repository } from 'typeorm'
 import { STATE } from 'src/constants/state.enum'
-import * as bcrypt from 'bcryptjs';
+import * as bcrypt from 'bcryptjs'
 
 @Injectable()
 export class UsersService {
@@ -16,7 +16,7 @@ export class UsersService {
 
   async create(createUserDto: CreateUserDto) {
     try {
-      createUserDto.password = await bcrypt.hash(createUserDto.password, 6)
+      createUserDto.password = await bcrypt.hash(createUserDto.password, process.env.HASH_SALT)
 
       const user = await this.userRepository.save(createUserDto)
 
@@ -64,13 +64,11 @@ export class UsersService {
           `El usuario con id ${userId} ha sido eliminado`,
           HttpStatus.BAD_REQUEST,
         )
-
       else if (user.state === STATE.BANNED)
         throw new HttpException(
           `El usuario con id ${userId} ha sido baneado`,
           HttpStatus.BAD_REQUEST,
         )
-
 
       return {
         status: 'success',
@@ -84,7 +82,19 @@ export class UsersService {
     }
   }
 
-  async findBy({key, value}: { key: keyof CreateUserDto, value: any}){}
+  async findBy({ key, value }: { key: keyof CreateUserDto; value: any }) {
+    try {
+      const user: User = await this.userRepository
+        .createQueryBuilder('user')
+        .addSelect('user.password')
+        .where({ [key]: value })
+        .getOne()
+
+      return user
+    } catch (error) {
+      throw new HttpException(error, HttpStatus.BAD_REQUEST)
+    }
+  }
 
   async findActiveUsers() {
     try {
