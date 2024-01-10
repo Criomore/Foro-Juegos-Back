@@ -4,6 +4,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -41,7 +42,8 @@ export class Post {
 
   // Relaciones
 
-  @ManyToOne(() => User, (user) => user.posts)
+  @ManyToOne(() => User, (user) => user.posts, {cascade: true})
+  @JoinColumn({name: 'user_id'})
   owner: User
 
   @OneToMany(() => Comment, (comment) => comment.post)

@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { Post } from './entities/post.entity'
 import { Repository } from 'typeorm'
 import { STATE } from 'src/constants/state.enum'
+import { User } from '../users/entities/user.entity'
 
 @Injectable()
 export class PostsService {
@@ -30,7 +31,9 @@ export class PostsService {
 
   async findAll() {
     try {
-      const posts = await this.postRepository.find()
+      const posts = await this.postRepository.find({
+        relations: ['owner', 'comments'],
+      })
       const count = await this.postRepository.count()
       const actives = await this.postRepository.count({
         where: { state: STATE.ACTIVE },
@@ -55,7 +58,10 @@ export class PostsService {
 
   async findOne(postId: string) {
     try {
-      const post = await this.postRepository.findOne({ where: { id: postId } })
+      const post = await this.postRepository.findOne({
+        where: { id: postId },
+        relations: ['owner', 'comments'],
+      })
 
       if (post === null) {
         throw new HttpException(
@@ -89,6 +95,7 @@ export class PostsService {
     try {
       const post = await this.postRepository.find({
         where: { state: STATE.ACTIVE },
+        relations: ['owner', 'comments'],
       })
       const count = await this.postRepository.count({
         where: { state: STATE.ACTIVE },
@@ -110,6 +117,7 @@ export class PostsService {
     try {
       const post = await this.postRepository.find({
         where: { state: STATE.BANNED },
+        relations: ['owner', 'comments'],
       })
       const count = await this.postRepository.count({
         where: { state: STATE.BANNED },
@@ -129,7 +137,9 @@ export class PostsService {
 
   async banPost(postId: string, reason: string[]) {
     try {
-      const post = await this.postRepository.findOne({ where: { id: postId } })
+      const post = await this.postRepository.findOne({
+        where: { id: postId },
+      })
 
       if (post.state === STATE.BANNED) {
         throw new HttpException(

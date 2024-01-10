@@ -5,6 +5,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm'
@@ -26,11 +27,12 @@ export class Comment {
   @Column({ type: 'enum', enum: STATE, default: STATE.ACTIVE })
   state: STATE
 
-
   //Relaciones
-  @ManyToOne(() => User, (user) => user.comments)
+  @ManyToOne(() => User, (user) => user.comments, { cascade: true })
+  @JoinColumn({ name: 'user_id' })
   owner: User
 
-  @ManyToOne(() => User, (user) => user.comments)
+  @ManyToOne(() => Post, (post) => post.comments, { cascade: true })
+  @JoinColumn({ name: 'post_id' })
   post: Post
 }
