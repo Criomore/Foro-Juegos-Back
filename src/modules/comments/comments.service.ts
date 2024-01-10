@@ -31,7 +31,9 @@ export class CommentsService {
 
   async findAll() {
     try {
-      const comments = await this.commentRepository.find()
+      const comments = await this.commentRepository.find({
+        relations: ['post', 'owner'],
+      })
       const count = await this.commentRepository.count()
       const banned = await this.commentRepository.count({
         where: { state: STATE.BANNED },
@@ -58,6 +60,7 @@ export class CommentsService {
     try {
       const comment = await this.commentRepository.findOne({
         where: { id: commentId },
+        relations: ['post', 'owner'],
       })
 
       if (comment === null) {
@@ -93,6 +96,7 @@ export class CommentsService {
     try {
       const comments = await this.commentRepository.find({
         where: { state: STATE.BANNED },
+        relations: ['posts', 'comments'],
       })
 
       return {
@@ -148,7 +152,7 @@ export class CommentsService {
       const comment = await this.commentRepository.findOne({
         where: { id: commentId },
       })
-   
+
       return {
         status: 'success',
         data: {

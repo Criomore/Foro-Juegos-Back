@@ -5,7 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { User } from './entities/user.entity'
 import { Repository } from 'typeorm'
 import { STATE } from 'src/constants/state.enum'
-import * as bcrypt from 'bcryptjs';
+import * as bcrypt from 'bcryptjs'
 
 @Injectable()
 export class UsersService {
@@ -34,7 +34,9 @@ export class UsersService {
 
   async findAll() {
     try {
-      const users = await this.userRepository.find()
+      const users = await this.userRepository.find({
+        relations: ['posts', 'comments'],
+      })
       const count = await this.userRepository.count()
       const actives = await this.userRepository.count({
         where: { state: STATE.ACTIVE },
@@ -57,20 +59,21 @@ export class UsersService {
 
   async findOne(userId: string) {
     try {
-      const user = await this.userRepository.findOne({ where: { id: userId } })
+      const user = await this.userRepository.findOne({
+        where: { id: userId },
+        relations: ['posts', 'comments'],
+      })
 
       if (user === null)
         throw new HttpException(
           `El usuario con id ${userId} ha sido eliminado`,
           HttpStatus.BAD_REQUEST,
         )
-
       else if (user.state === STATE.BANNED)
         throw new HttpException(
           `El usuario con id ${userId} ha sido baneado`,
           HttpStatus.BAD_REQUEST,
         )
-
 
       return {
         status: 'success',
@@ -90,6 +93,7 @@ export class UsersService {
     try {
       const users = await this.userRepository.find({
         where: { state: STATE.ACTIVE },
+        relations: ['posts', 'comments'],
       })
       const count = await this.userRepository.count({
         where: { state: STATE.ACTIVE },
@@ -107,6 +111,7 @@ export class UsersService {
     try {
       const users = await this.userRepository.find({
         where: { state: STATE.BANNED },
+        relations: ['posts', 'comments'],
       })
       const count = await this.userRepository.count({
         where: { state: STATE.BANNED },
