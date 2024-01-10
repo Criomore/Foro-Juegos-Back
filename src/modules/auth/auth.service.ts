@@ -1,26 +1,63 @@
-import { Injectable } from '@nestjs/common';
-// import { CreateAuthDto } from './dto/create-auth.dto';
-// import { UpdateAuthDto } from './dto/update-auth.dto';
+import { Injectable } from '@nestjs/common'
+import { UsersService } from '../users/users.service'
+import * as bcrypt from 'bcryptjs'
+import * as jwt from 'jsonwebtoken'
+import { User } from '../users/entities/user.entity'
+import { PayloadToken } from './interfaces/auth.interface'
 
 @Injectable()
 export class AuthService {
-  // create(createAuthDto: CreateAuthDto) {
-  //   return 'This action adds a new auth';
-  // }
+  constructor(private readonly userService: UsersService) {}
 
-  // findAll() {
-  //   return `This action returns all auth`;
-  // }
+  async validateUser(username: string, password: string) {
+    const userByUserName = await this.userService.findBy({
+      key: 'userName',
+      value: username,
+    })
+    const userByEmail = await this.userService.findBy({
+      key: 'email',
+      value: username,
+    })
 
-  // findOne(id: number) {
-  //   return `This action returns a #${id} auth`;
-  // }
+    if (userByUserName) {
+      const match = await bcrypt.compare(password, userByUserName.password)
+      if (match) return userByUserName
+    }
 
-  // update(id: number, updateAuthDto: UpdateAuthDto) {
-  //   return `This action updates a #${id} auth`;
-  // }
+    if (userByEmail) {
+      const match = await bcrypt.compare(password, userByEmail.password)
+      if (match) return userByEmail
+    }
 
-  // remove(id: number) {
-  //   return `This action removes a #${id} auth`;
-  // }
+    return null
+  }
+
+  async signJWT({
+    payload,
+    secret,
+    expires,
+  }: {
+    payload: jwt.JwtPayload
+    secret: string
+    expires: string | number
+  }) {
+    return jwt.sign(payload, secret, { expiresIn: expires })
+  }
+
+  async generateJWT(user: User): Promise<any> {
+    const getUser = await this.userService.findOne(user.id)
+
+    const payload: PayloadToken = {
+      sub: getUser.data.user.id,
+    }
+
+    return {
+      accessToken: await this.signJWT({
+        payload,
+        secret: 'criomore1331@jwt.com',
+        expires: '1h',
+      }),
+      user,
+    }
+  }
 }

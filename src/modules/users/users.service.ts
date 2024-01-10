@@ -16,7 +16,7 @@ export class UsersService {
 
   async create(createUserDto: CreateUserDto) {
     try {
-      createUserDto.password = await bcrypt.hash(createUserDto.password, 6)
+      createUserDto.password = await bcrypt.hash(createUserDto.password, 10)
 
       const user = await this.userRepository.save(createUserDto)
 
@@ -87,7 +87,19 @@ export class UsersService {
     }
   }
 
-  // async findBy({key, value}: { key: keyof CreateUserDto, value: any})
+  async findBy({ key, value }: { key: keyof CreateUserDto; value: any }) {
+    try {
+      const user: User = await this.userRepository
+        .createQueryBuilder('user')
+        .addSelect('user.password')
+        .where({ [key]: value })
+        .getOne()
+
+      return user
+    } catch (error) {
+      throw new HttpException(error, HttpStatus.BAD_REQUEST)
+    }
+  }
 
   async findActiveUsers() {
     try {
