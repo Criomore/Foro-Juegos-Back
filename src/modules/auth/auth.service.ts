@@ -52,9 +52,9 @@ export class AuthService {
     }
 
     return {
-      accessToken: this.signJWT({
+      accessToken: await this.signJWT({
         payload,
-        secret: process.env.JWT_SECRET,
+        secret: 'criomore1331@jwt.com',
         expires: '1h',
       }),
       user,

@@ -1,4 +1,5 @@
 import { IsArray, IsBoolean, IsDateString, IsNotEmpty, IsOptional, IsString } from 'class-validator'
+import { User } from 'src/modules/users/entities/user.entity'
 
 export class CreatePostDto {
   @IsString({message: 'Deberia ser un texto'})
@@ -13,11 +14,8 @@ export class CreatePostDto {
   @IsOptional()
   resource: string
 
-  @IsDateString()
-  creationDate: Date
-
   @IsString({message: 'Deberia ser un texto'})
-  owner: string
+  owner: User
 
   @IsArray()
   @IsString({each: true, message: 'Deberia ser un texto'})

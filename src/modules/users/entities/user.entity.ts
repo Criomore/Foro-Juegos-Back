@@ -69,4 +69,5 @@ export class User {
   
   @OneToMany(() => Post, (post) => post.owner)
   posts: Post[]
+  static id: keyof Post
 }

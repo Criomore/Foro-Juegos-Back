@@ -16,7 +16,7 @@ export class UsersService {
 
   async create(createUserDto: CreateUserDto) {
     try {
-      createUserDto.password = await bcrypt.hash(createUserDto.password, process.env.HASH_SALT)
+      createUserDto.password = await bcrypt.hash(createUserDto.password, 10)
 
       const user = await this.userRepository.save(createUserDto)
 
@@ -34,7 +34,9 @@ export class UsersService {
 
   async findAll() {
     try {
-      const users = await this.userRepository.find()
+      const users = await this.userRepository.find({
+        relations: ['posts', 'comments'],
+      })
       const count = await this.userRepository.count()
       const actives = await this.userRepository.count({
         where: { state: STATE.ACTIVE },
@@ -57,7 +59,10 @@ export class UsersService {
 
   async findOne(userId: string) {
     try {
-      const user = await this.userRepository.findOne({ where: { id: userId } })
+      const user = await this.userRepository.findOne({
+        where: { id: userId },
+        relations: ['posts', 'comments'],
+      })
 
       if (user === null)
         throw new HttpException(
@@ -100,6 +105,7 @@ export class UsersService {
     try {
       const users = await this.userRepository.find({
         where: { state: STATE.ACTIVE },
+        relations: ['posts', 'comments'],
       })
       const count = await this.userRepository.count({
         where: { state: STATE.ACTIVE },
@@ -117,6 +123,7 @@ export class UsersService {
     try {
       const users = await this.userRepository.find({
         where: { state: STATE.BANNED },
+        relations: ['posts', 'comments'],
       })
       const count = await this.userRepository.count({
         where: { state: STATE.BANNED },
