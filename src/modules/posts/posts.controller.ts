@@ -68,8 +68,8 @@ export class PostsController {
     return this.postsService.update(postId, updatePostDto)
   }
 
-  @Delete('delete/:id')
-  remove(@Param('id') id: string) {
-    return this.postsService.remove(id)
+  @Delete('delete/:postId')
+  remove(@Param('id') postId: string) {
+    return this.postsService.remove(postId)
   }
 }
