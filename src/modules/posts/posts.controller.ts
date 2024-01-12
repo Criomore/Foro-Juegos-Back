@@ -40,6 +40,16 @@ export class PostsController {
     return this.postsService.findBannedPosts()
   }
 
+  @Patch('like/:postId')
+  likePost(@Param('postId') postId: string) {
+    return this.postsService.likePost(postId)
+  }
+
+  @Patch('dislike/:postId')
+  dislikePost(@Param('postId') postId: string) {
+    return this.postsService.dislikePost(postId)
+  }
+
   @Patch('ban/:postId')
   banPost(@Param('postId') postId: string, @Body() reason: string[]) {
     return this.postsService.banPost(postId, reason)
@@ -51,7 +61,10 @@ export class PostsController {
   }
 
   @Patch('update/:postId')
-  update(@Param('postId') postId: string, @Body() updatePostDto: UpdatePostDto) {
+  update(
+    @Param('postId') postId: string,
+    @Body() updatePostDto: UpdatePostDto,
+  ) {
     return this.postsService.update(postId, updatePostDto)
   }
 
