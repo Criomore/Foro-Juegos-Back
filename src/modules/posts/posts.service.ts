@@ -135,6 +135,30 @@ export class PostsService {
     }
   }
 
+  async likePost(postId: string) {
+    const post = await this.postRepository.findOne({
+      where: { id: postId },
+    })
+
+    post.likes += 1
+
+    await this.postRepository.save(post)
+
+    return post
+  }
+
+  async dislikePost(postId: string) {
+    const post = await this.postRepository.findOne({
+      where: { id: postId },
+    })
+
+    post.dislikes += 1
+
+    await this.postRepository.save(post)
+
+    return post
+  }
+
   async banPost(postId: string, reason: string[]) {
     try {
       const post = await this.postRepository.findOne({
@@ -205,6 +229,8 @@ export class PostsService {
       await this.postRepository.update(postId, updatePostDto)
 
       const post = await this.postRepository.findOne({ where: { id: postId } })
+
+      await this.postRepository.save(post)
 
       return {
         status: 'success',
