@@ -7,8 +7,8 @@ import {
 import { Reflector } from '@nestjs/core'
 import { Request } from 'express'
 import { PUBLIC_KEY } from 'src/constants/keyDecorator'
+import { IUseToken } from 'src/interfaces/auth.interface'
 import { UsersService } from 'src/modules/users/users.service'
-import { IUseToken } from '../interfaces/auth.interface'
 import { useToken } from 'src/utils/auth/use.token'
 
 @Injectable()
@@ -53,9 +53,8 @@ export class AuthGuard implements CanActivate {
       throw new UnauthorizedException('Usuario invalido')
     }
 
-    req.idUser =  dataUser.data.user.id
+    req.idUser = dataUser.data.user.id
     // req.roleUser = dataUser.data.user.role
-
 
     return true
   }

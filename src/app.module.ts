@@ -9,11 +9,20 @@ import { UsersModule } from './modules/users/users.module'
 import { CommentsModule } from './modules/comments/comments.module'
 import { AuthModule } from './modules/auth/auth.module'
 import { APP_INTERCEPTOR, APP_PIPE, Reflector } from '@nestjs/core'
+import { ConfigModule } from '@nestjs/config'
+import config from './config/config'
+
+
 
 @Module({
   imports: [
     PostsModule,
     UsersModule,
+    ConfigModule.forRoot({
+      envFilePath: `../${process.env.NODE_ENV}.env`,
+      load: [config],
+      isGlobal: true,
+    }),
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'localhost',

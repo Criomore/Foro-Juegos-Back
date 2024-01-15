@@ -1,8 +1,6 @@
-import {
-  AuthTokenResult,
-  IUseToken,
-} from 'src/modules/auth/interfaces/auth.interface'
+
 import * as jwt from 'jsonwebtoken'
+import { AuthTokenResult, IUseToken } from 'src/interfaces/auth.interface'
 
 export const useToken = (token: string): IUseToken | string => {
   try {
